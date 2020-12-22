@@ -19,7 +19,7 @@ import mvc.command.NullHandler;
 
 public class ControllerUsingURI extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String prefix = "WEB-INF/view/";
+	private String prefix = "/WEB-INF/view/";
 	private String suffix = ".jsp";
 	private Map<String,CommandHandler> map;
 	
@@ -91,6 +91,7 @@ public class ControllerUsingURI extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		if (view !=null) {
 			request.getRequestDispatcher(prefix + view + suffix).forward(request, response);
 		}

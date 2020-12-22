@@ -11,8 +11,14 @@ public class Member {
 	private String email;
 	private String passwordQuestion;
 	private String passwordAnswer;
-	private int auth;
-	
+	private String auth;
+		
+	public String getAuth() {
+		return auth;
+	}
+	public void setAuth(String auth) {
+		this.auth = auth;
+	}
 	public String getId() {
 		return id;
 	}
@@ -31,7 +37,7 @@ public class Member {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getRegDate() {
+	public Date getRegDate() {
 		return regDate;
 	}
 	public void setRegDate(Date regDate) {
@@ -61,12 +67,7 @@ public class Member {
 	public void setPasswordAnswer(String passwordAnswer) {
 		this.passwordAnswer = passwordAnswer;
 	}
-	public int getAuth() {
-		return auth;
-	}
-	public void setAuth(int auth) {
-		this.auth = auth;
-	}
+
 	
 	
 }

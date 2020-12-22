@@ -17,5 +17,19 @@
 </head>
 <body>
 
+<c:if test="${!empty authUser }">
+<h1>${authUser.id }님 환영합니다</h1>
+<a href="${root }/auth/logout.do">로그아웃</a>
+<a href="${root }/auth/check/changeMemberInfo.do">회원정보수정</a>
+<a href="${root }/auth/check/deleteMember.do">회원탈퇴</a>
+</c:if>
+
+
+<c:if test="${empty authUser }">
+	<a href="${root}/join.do">회원가입</a>
+	<a href="${root}/login.do">로그인</a>
+	<a href="${root}/findId.do">아이디찾기</a>
+	<a href="${root}/findPassword.do">패스워드찾기</a>
+</c:if>
 </body>
 </html>

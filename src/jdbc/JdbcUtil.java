@@ -11,13 +11,15 @@ public class JdbcUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void close(AutoCloseable... ins) {
 		for (AutoCloseable i : ins) {
-			try {
-				i.close();
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (i != null) {
+				try {
+					i.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

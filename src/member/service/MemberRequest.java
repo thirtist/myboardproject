@@ -2,7 +2,7 @@ package member.service;
 
 import java.util.Map;
 
-public class MemberJoinRequest {
+public class MemberRequest {
 	private String id;
 	private String nickName;
 	private String password;
@@ -11,6 +11,15 @@ public class MemberJoinRequest {
 	private String email;
 	private String passwordQuestion;
 	private String passwordAnswer;
+	private String auth;
+
+	public String getAuth() {
+		return auth;
+	}
+
+	public void setAuth(String auth) {
+		this.auth = auth;
+	}
 
 	public String getId() {
 		return id;

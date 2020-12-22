@@ -1,4 +1,6 @@
-/jdbc/
 /member/
+/auth/
+/filter/
+/jdbc/
 /mvc/
-/util/
+/board/

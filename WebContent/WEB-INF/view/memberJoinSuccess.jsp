@@ -17,5 +17,6 @@
 </head>
 <body>
 <h1>회원가입성공</h1>
+<a href="${root }/login.do">로그인 페이지</a>
 </body>
 </html>

@@ -6,14 +6,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import member.service.DuplicateEmailException;
 import member.service.DuplicateIdException;
-import member.service.MemberJoinRequest;
-import member.service.MemberJoinService;
+import member.service.MemberRequest;
+import member.service.MemberService;
 import mvc.command.CommandHandler;
 
 public class MemberJoinHandler implements CommandHandler {
 	private static final String FORM_VIEW = "memberJoinForm";
-	private MemberJoinService memberJoinService = new MemberJoinService();
+	private MemberService memberService = new MemberService();
 	
 	@Override
 	public String process(HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -30,11 +31,28 @@ public class MemberJoinHandler implements CommandHandler {
 	
 	private String processGet(HttpServletRequest req, HttpServletResponse res) {
 		String id = req.getParameter("id");
+		String email = req.getParameter("email");
 		
-		if(id != null) {
-			String check  = memberJoinService.existIdButton(id);
-			req.setAttribute("existIdButton", check);			
+		// 아이디 중복 확인버튼
+		if(id !=null && id.isEmpty()) {
+			req.setAttribute("existIdButton", "emptyId");			
 		}
+		if(id != null && !id.isEmpty()) {
+			String check  = memberService.existIdButton(id);
+			req.setAttribute("existIdButton", check);		
+			req.setAttribute("id", id);		
+		}
+		// 이메일 중복 확인버튼
+		if(email !=null && email.isEmpty()) {
+			req.setAttribute("existEmailButton", "emptyEmail");			
+		}
+		if(email != null && !email.isEmpty()) {
+			String check  = memberService.existEmailButton(email);
+			req.setAttribute("existEmailButton", check);
+			req.setAttribute("email", email);			
+		}
+		
+		//
 		
 		return FORM_VIEW;
 	}
@@ -42,33 +60,36 @@ public class MemberJoinHandler implements CommandHandler {
 
 	private String processPost(HttpServletRequest req, HttpServletResponse res) {
 		
-		MemberJoinRequest memberJoinRequest = new MemberJoinRequest();
-		memberJoinRequest.setId(req.getParameter("id"));
-		memberJoinRequest.setNickName(req.getParameter("nickName"));
-		memberJoinRequest.setPassword(req.getParameter("password"));
-		memberJoinRequest.setPasswordConfirm(req.getParameter("passwordConfirm"));
-		memberJoinRequest.setName(req.getParameter("name"));
-		memberJoinRequest.setEmail(req.getParameter("email"));
-		memberJoinRequest.setPasswordQuestion(req.getParameter("passwordQuestion"));
-		memberJoinRequest.setPasswordAnswer(req.getParameter("passwordAnswer"));
+		MemberRequest memberRequest = new MemberRequest();
+		memberRequest.setId(req.getParameter("id"));
+		memberRequest.setNickName(req.getParameter("nickName"));
+		memberRequest.setPassword(req.getParameter("password"));
+		memberRequest.setPasswordConfirm(req.getParameter("passwordConfirm"));
+		memberRequest.setName(req.getParameter("name"));
+		memberRequest.setEmail(req.getParameter("email"));
+		memberRequest.setPasswordQuestion(req.getParameter("passwordQuestion"));
+		memberRequest.setPasswordAnswer(req.getParameter("passwordAnswer"));
 		
 		Map<String,Boolean> errors = new HashMap<>();
 		req.setAttribute("errors", errors);
-		memberJoinRequest.validate(errors);
+		memberRequest.validate(errors);
 		
 		if(!errors.isEmpty()) {
 			return FORM_VIEW;
 		}
 				
 		try {
-			memberJoinService.memberJoin(memberJoinRequest);
+			memberService.join(memberRequest);
 			return "memberJoinSuccess";
+		} catch (DuplicateEmailException e) {
+			errors.put("DuplicateEmailException", true);
+			e.printStackTrace();
+			return FORM_VIEW;
 		} catch (DuplicateIdException e) {
 			errors.put("duplicateId", true);
 			e.printStackTrace();
 			return FORM_VIEW;
 		}
-		
-		
+				
 	}
 }
