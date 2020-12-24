@@ -11,14 +11,7 @@ public class Member {
 	private String email;
 	private String passwordQuestion;
 	private String passwordAnswer;
-	private String auth;
 		
-	public String getAuth() {
-		return auth;
-	}
-	public void setAuth(String auth) {
-		this.auth = auth;
-	}
 	public String getId() {
 		return id;
 	}

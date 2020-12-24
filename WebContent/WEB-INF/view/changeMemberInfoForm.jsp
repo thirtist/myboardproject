@@ -38,17 +38,16 @@ $(function(){
 
 	이메일(중복불가)
 	<input type="email" name="email" id="input2" value="${email }" />
-	<c:if test="${errors.email }">이메일을 입력하세요</c:if>
-	<c:if test="${errors.DuplicateEmailException}">중복된 이메일입니다</c:if>
-	
+
 	<!--버튼  -->	
 	<button id="btn2" type="button">email중복확인</button>
-	<c:if test="${existEmailButton == 'existEmail' }">중복된 이메일 입니다.</c:if>	
+	<c:if test="${errors.emptyEmail }">중복된 이메일 입니다.</c:if>	
+	<c:if test="${existEmailButton == 'existEmail' }">중복된 이메일 입니다 </c:if>	
 	<c:if test="${existEmailButton == 'none' }">사용가능한 이메일 입니다.</c:if>	
-	<c:if test="${existEmailButton == 'emptyEmail' }">이메일을 입력하세요</c:if>	
 	<!--  -->	
 	<c:if test="${errors.DuplicateEmailException }">이메일이 중복됩니다</c:if>
-	
+	<c:if test="${errors.email }">이메일을 입력하세요</c:if>
+
 	
 	<br />
 

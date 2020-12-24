@@ -18,7 +18,7 @@ import auth.service.User;
  * Servlet Filter implementation class LoginCheckFilter
  */
 
-@WebFilter("/auth/admin/*")
+@WebFilter("/admin/*")
 public class AdminCheckFilter implements Filter {
 
     /**
@@ -53,7 +53,7 @@ public class AdminCheckFilter implements Filter {
 		}
 		if(session == null || session.getAttribute("authUser") == null) {
 			response.sendRedirect(request.getContextPath() + "/login.do");
-		} else if (user.getId() != "admin"){
+		} else if (!user.getId().equals("admin")){
 			response.sendRedirect(request.getContextPath() + "/invalid.jsp");			
 		} else	{
 			//로그인이 되어있으면

@@ -1,4 +1,4 @@
-package auth.command;
+package member.command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,15 +15,18 @@ public class DeleteMemberHandler implements CommandHandler{
 
 		User user = (User) req.getSession().getAttribute("authUser");
 		
+		if(user.getId().equals("admin")) {
+			req.setAttribute("error", "admin계정은 탈퇴를 할 수 없습니다");
+			return "null";
+		}
+		
 		try {
 			deleteMemeberService.deleteMemeber(user.getId());
 			req.getSession(false).invalidate();
 			res.sendRedirect(req.getContextPath()+"/index.jsp");
 		} catch (NotFoundIdException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} 
 
 		return null;
 	}

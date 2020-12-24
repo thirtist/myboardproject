@@ -20,19 +20,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="${root }/login.do" method="post">
-		아이디 <input type="text" name="id" value="${param.id }"/>
-		<c:if test="${errors.id }">아이디를 입력하세요</c:if>
-		<c:if test="${errors.notFoundId }">아이디를 찾을 수 없습니다</c:if>
-		<br />
-		비밀번호 <input type="password" name="password" />
-		<c:if test="${errors.password }">패스워드를 입력하세요</c:if>
-		<c:if test="${errors.notMatchPassword }">패스워드가 다릅니다</c:if>
-		<br />
-		<button>로그인</button>
-	</form>
-	<a href="${root }/join.do">회원가입</a>
-	<a href="${root }/findId.do">아이디찾기</a>
-	<a href="${root }/findPassword.do">패스워드찾기</a>
+	${error }
+		<c:forEach var="i" items="${boardList }">
+			<a href="${root }readArticleList.do?boardName=${i }">${i }</a>
+			<br />
+		</c:forEach>
+	
 </body>
 </html>

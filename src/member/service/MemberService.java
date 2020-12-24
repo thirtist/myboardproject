@@ -54,10 +54,11 @@ public class MemberService {
 
 	}
 	
-	public void join(MemberRequest memberRequest) {
+	public void join(MemberRequest memberRequest) throws SQLException {
 
 		Connection con = null;
 		Member member = null;
+		Member member2 = null;
 		try {
 			con = ConnectionProvider.getConnection();
 			
@@ -68,6 +69,13 @@ public class MemberService {
 				JdbcUtil.rollback(con);
 				throw new DuplicateIdException();
 			}
+			
+			member2 = memberDao.selectByEmail(con, memberRequest.getEmail());
+			if(member2 !=null && member2.getEmail() != null) {
+				JdbcUtil.rollback(con);
+				throw new DuplicateEmailException();
+			}
+			
 			member = new Member();
 			member.setId(memberRequest.getId());
 			member.setNickName(memberRequest.getNickName());
@@ -80,8 +88,6 @@ public class MemberService {
 			memberDao.memberInsert(con, member);
 			
 			con.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
 			JdbcUtil.close(con);
 		}

@@ -11,15 +11,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>잘못된 경로입니다</h1>
-	
-	${error }
-	
-	<br />
-	<a href="${root }/index.jsp">인덱스로 돌아가기</a>
-	
+
+<a href="${root }/readBoardList.do">게시판목록보기</a>
+<a href="${root }/admin/createBoard.do">신규게시판생성</a>
+<a href="${root }/admin/deleteBoard.do">게시판제거</a>
+ 	
+
 </body>
 </html>

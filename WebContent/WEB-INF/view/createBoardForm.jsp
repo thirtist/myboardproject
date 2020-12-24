@@ -16,6 +16,14 @@
 <title>Insert title here</title>
 </head>
 <body>
+<form action="${root }/admin/createBoard.do" method="post">
 
+	생성할 게시판 이름
+	<input type="text" name="boardName"/>
+	<c:if test="${errors.boardName }">게시판이름을 입력하세요</c:if>
+	<c:if test="${errors.DuplicateBoardNameException }">게시판이름이 중복됩니다.</c:if>
+	<br />
+	<button>게시판생성</button>
+</form>
 </body>
 </html>

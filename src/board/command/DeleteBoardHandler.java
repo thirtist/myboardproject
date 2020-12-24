@@ -2,18 +2,21 @@ package board.command;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import board.service.CreateBoardService;
+import board.dao.BoardDao;
+import board.service.DeleteBoardService;
 import board.service.DuplicateBoardNameException;
+import board.service.ReadBoardListService;
 import mvc.command.CommandHandler;
 
-public class CreateBoardHandler implements CommandHandler {
-	private final String FORM_VIEW = "createBoardForm";
-	CreateBoardService createBoardService = new CreateBoardService();
+public class DeleteBoardHandler implements CommandHandler {
+	private final String FORM_VIEW = "deleteBoardForm";
+	DeleteBoardService deleteBoardService = new DeleteBoardService();
 	
 	@Override
 	public String process(HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -29,7 +32,18 @@ public class CreateBoardHandler implements CommandHandler {
 	}
 
 	private String processGet(HttpServletRequest req, HttpServletResponse res) {
-					
+		ReadBoardListService readBoardListService = new ReadBoardListService();
+		
+		List<String> boardList = null;
+		try {
+			boardList = readBoardListService.readBoardList();
+		} catch (SQLException e) {
+			req.setAttribute("error", "readBoardListService SQL에러");
+			e.printStackTrace();
+			return FORM_VIEW;
+		}
+		req.setAttribute("boardList", boardList);
+		
 		return FORM_VIEW;
 	}
 
@@ -46,18 +60,18 @@ public class CreateBoardHandler implements CommandHandler {
 		}
 
 		try {
-			createBoardService.createBoard(boardName);
-		} catch (DuplicateBoardNameException e) {
-			errors.put("DuplicateBoardNameException", true);
+			deleteBoardService.deleteBoard(boardName);
+		} catch (NotFoundBoardNameException e) {
+			errors.put("NotFoundBoardNameException", true);
 			e.printStackTrace();
 			return FORM_VIEW;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			req.setAttribute("error", "createBoard SQL에러");
+			req.setAttribute("error", "deleteBoard SQL에러");
 			return "null";
 		}
-
-		return "createBoardSuccess";
+		
+		return "deleteBoardSuccess";
 	}
 	
 }

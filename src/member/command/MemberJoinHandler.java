@@ -1,5 +1,6 @@
 package member.command;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,6 +90,10 @@ public class MemberJoinHandler implements CommandHandler {
 			errors.put("duplicateId", true);
 			e.printStackTrace();
 			return FORM_VIEW;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			req.setAttribute("error", "SQLException발생");
+			return "null";
 		}
 				
 	}

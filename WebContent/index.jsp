@@ -18,10 +18,13 @@
 <body>
 
 <c:if test="${!empty authUser }">
-<h1>${authUser.id }님 환영합니다</h1>
+<h1>${authUser.nickName }님 환영합니다</h1>
 <a href="${root }/auth/logout.do">로그아웃</a>
 <a href="${root }/auth/check/changeMemberInfo.do">회원정보수정</a>
 <a href="${root }/auth/check/deleteMember.do">회원탈퇴</a>
+ 	<c:if test="${authUser.id == 'admin' }">
+		<a href="${root }/admin/boardControl.do">게시판관리</a>
+ 	</c:if>
 </c:if>
 
 

@@ -1,4 +1,4 @@
-package auth.command;
+package member.command;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,23 +46,29 @@ public class ChangeMemberInfoHandler implements CommandHandler {
 		}
 
 		req.setAttribute("member", member);
-		req.setAttribute("email", member.getEmail());			
+
 		
 		// 이메일 중복 확인버튼
-		String email = req.getParameter("email");
+		String email = null;
+		email = req.getParameter("email");
+		req.setAttribute("email", member.getEmail());
+		
 		MemberService memberService = new MemberService();
 		
+		//동일 이메일일 경우는 사용가능하다고 하고 바로 리턴
+		if (email !=null && member.getEmail().equals(email)) {
+			req.setAttribute("existEmailButton", "none");
+			return FORM_VIEW;
+		}
+		
 		if(email !=null && email.isEmpty()) {
-			req.setAttribute("existEmailButton", "emptyEmail");			
+			req.setAttribute("email", email);
+			errors.put("emptyEmail", true);	
 		}
 		if(email != null && !email.isEmpty()) {
 			String check  = memberService.existEmailButton(email);
 			req.setAttribute("existEmailButton", check);
-			req.setAttribute("email", email);			
-		}
-		if (member.getEmail().equals(email)) {
-			req.setAttribute("existEmailButton", "none");
-			req.setAttribute("email", email);			
+			req.setAttribute("email", email);
 		}
 				
 		//
@@ -89,6 +95,8 @@ public class ChangeMemberInfoHandler implements CommandHandler {
 		member.setPasswordQuestion(passwordQuestion);
 		member.setPasswordAnswer(passwordAnswer);
 		req.setAttribute("member", member);
+		req.getParameter(email);
+		req.setAttribute("email", email);
 		
 		ChangeMemberInfoRequest changeMemberInfoRequest = new ChangeMemberInfoRequest(nickName, password,
 				passwordConfirm, name, email, passwordQuestion, passwordAnswer);

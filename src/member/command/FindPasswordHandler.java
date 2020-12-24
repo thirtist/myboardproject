@@ -83,7 +83,7 @@ public class FindPasswordHandler implements CommandHandler {
 		if (passwordAnswer !=null && !passwordAnswer.isEmpty() && 
 			passwordAnswer.equals(member.getPasswordAnswer())
 			) {
-			User user = new User(member.getId(),member.getNickName(),member.getAuth());
+			User user = new User(member.getId(),member.getNickName());
 			req.getSession().setAttribute("authUser", user);
 			return "changePasswordForm";
 		}

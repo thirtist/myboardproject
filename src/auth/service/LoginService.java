@@ -26,7 +26,7 @@ public class LoginService {
 			if (member.getPassword() != null && !member.getPassword().equals(loginRequest.getPassword())) {
 				throw new NotMatchPasswordException();
 			}
-			user = new User(member.getId(), member.getNickName(), member.getAuth());
+			user = new User(member.getId(), member.getNickName());
 
 		} catch (SQLException e) {
 			e.printStackTrace();

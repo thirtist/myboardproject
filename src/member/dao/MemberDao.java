@@ -32,7 +32,6 @@ public class MemberDao {
 				member.setEmail(rs.getString("EMAIL"));
 				member.setPasswordQuestion(rs.getString("PASSWORDQUESTION"));
 				member.setPasswordAnswer(rs.getString("PASSWORDANSWER"));
-				member.setAuth(rs.getString("AUTH"));
 			}
 
 		} finally {
@@ -102,7 +101,6 @@ public class MemberDao {
 				member.setEmail(rs.getString("EMAIL"));
 				member.setPasswordQuestion(rs.getString("PASSWORDQUESTION"));
 				member.setPasswordAnswer(rs.getString("PASSWORDANSWER"));
-				member.setAuth(rs.getString("AUTH"));
 			}
 
 		} finally {
@@ -114,7 +112,7 @@ public class MemberDao {
 
 	public void memberInsert(Connection con, Member member) throws SQLException {
 
-		String sql = "INSERT INTO member_mbp VALUES " + "(?, ?, ?, SYSDATE, ?, ?, ?, ?, NULL)";
+		String sql = "INSERT INTO member_mbp VALUES " + "(?, ?, ?, SYSDATE, ?, ?, ?, ?)";
 
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
