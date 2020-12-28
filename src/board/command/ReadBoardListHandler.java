@@ -10,7 +10,7 @@ import board.service.ReadBoardListService;
 import mvc.command.CommandHandler;
 
 public class ReadBoardListHandler implements CommandHandler {
-	private final String FORM_VIEW = "ReadBoardListForm";
+	private final String FORM_VIEW = "readBoardListForm";
 	ReadBoardListService readBoardListService = new ReadBoardListService();
 	
 	@Override

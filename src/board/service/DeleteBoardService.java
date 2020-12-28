@@ -15,15 +15,28 @@ public class DeleteBoardService {
 	public void deleteBoard(String boardName) throws SQLException {
 		Connection con = ConnectionProvider.getConnection();
 		try {
-
+			con.setAutoCommit(false);
 			List<String> list = boardDao.getBoardList(con);
 
 			if (!list.contains(boardName)) {
 				throw new NotFoundBoardNameException();
 			}
 
-			boardDao.deleteBoardByBoardName(con, boardName);
+			try {
+				boardDao.deleteBoardByBoardName(con, boardName);
+			} catch (SQLException e) {
+				JdbcUtil.rollback(con);
+				throw e;
+			}
+			
+			try {
+				boardDao.deleteSeq(con, boardName);
+			} catch (SQLException e) {
+				JdbcUtil.rollback(con);
+				throw e;
+			}
 
+			con.commit();
 		} finally {
 			JdbcUtil.close(con);
 		}

@@ -5,6 +5,7 @@ import java.util.Date;
 public class Board {
 	private int boardKey;
 	private String boardName;
+	private int articleNo;
 	private String preTitle;
 	private String title;
 	private String content;
@@ -14,11 +15,13 @@ public class Board {
 	private Date modDate;
 	private int read_cnt;
 	
-	public Board(int boardKey, String boardName, String preTitle, String title, String content, String user_id,
-			String user_nickName, Date regDate, Date modDate, int read_cnt) {
-
+	
+	public Board(int boardKey, String boardName, int articleNo, String preTitle, String title, String content,
+			String user_id, String user_nickName, Date regDate, Date modDate, int read_cnt) {
+		
 		this.boardKey = boardKey;
 		this.boardName = boardName;
+		this.articleNo = articleNo;
 		this.preTitle = preTitle;
 		this.title = title;
 		this.content = content;
@@ -67,6 +70,54 @@ public class Board {
 
 	public int getRead_cnt() {
 		return read_cnt;
+	}
+
+	public int getArticleNo() {
+		return articleNo;
+	}
+
+	public void setBoardKey(int boardKey) {
+		this.boardKey = boardKey;
+	}
+
+	public void setBoardName(String boardName) {
+		this.boardName = boardName;
+	}
+
+	public void setArticleNo(int articleNo) {
+		this.articleNo = articleNo;
+	}
+
+	public void setPreTitle(String preTitle) {
+		this.preTitle = preTitle;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public void setUser_nickName(String user_nickName) {
+		this.user_nickName = user_nickName;
+	}
+
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
+	}
+
+	public void setModDate(Date modDate) {
+		this.modDate = modDate;
+	}
+
+	public void setRead_cnt(int read_cnt) {
+		this.read_cnt = read_cnt;
 	}
 	
 	

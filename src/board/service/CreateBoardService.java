@@ -14,14 +14,28 @@ public class CreateBoardService {
 	public void createBoard(String boardName) throws SQLException {
 		Connection con = ConnectionProvider.getConnection();
 		try {
-
+			con.setAutoCommit(false);
 			List<String> list = boardDao.getBoardList(con);
 
 			if (list.contains(boardName)) {
 				throw new DuplicateBoardNameException();
 			}
 
-			boardDao.createBoardByAdmin(con, boardName);
+			try {
+				boardDao.createSeq(con, boardName);
+			} catch (SQLException e) {
+				JdbcUtil.rollback(con);
+				throw e;
+			}
+			
+			try {
+				boardDao.createBoardByAdmin(con, boardName);
+			} catch (SQLException e) {
+				JdbcUtil.rollback(con);
+				throw e;
+			}
+			
+			con.commit();
 
 		} finally {
 			JdbcUtil.close(con);

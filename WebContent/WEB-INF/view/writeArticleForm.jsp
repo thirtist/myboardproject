@@ -16,27 +16,20 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<form action="${root }/auth/writeArticle.do?boardName=${param.boardName}" method="post">
+		말머리
+		<input size="5" name = preTitle type="text" value="${param.preTitle }"/>	
+		제목
+		<input name = title type="text" value="${param.title }"/>
+		<c:if test="${errors.title }">제목을 입력하세요</c:if>
+		<br />
+		내용
+		<br />
+		<textarea style="resize: none;" name = content rows="10" cols="50" >${param.content }</textarea>
+		<c:if test="${errors.content }">내용을 입력하세요</c:if>
+		<br />
+		<button>글쓰기</button>
 
-<c:if test="${!empty authUser }">
-<h1>${authUser.nickName }님 환영합니다</h1>
-<a href="${root }/auth/logout.do">로그아웃</a>
-<a href="${root }/auth/check/changeMemberInfo.do">회원정보수정</a>
-<a href="${root }/auth/check/deleteMember.do">회원탈퇴</a>
- 	<c:if test="${authUser.id == 'admin' }">
-		<a href="${root }/admin/boardControl.do">게시판관리</a>
- 	</c:if>
-</c:if>
-
-
-<c:if test="${empty authUser }">
-	<a href="${root}/join.do">회원가입</a>
-	<a href="${root}/login.do">로그인</a>
-	<a href="${root}/findId.do">아이디찾기</a>
-	<a href="${root}/findPassword.do">패스워드찾기</a>
-</c:if>
-
-<br />
-<a href="${root }/readBoardList.do">게시판리스트</a>
-
+	</form>
 </body>
 </html>

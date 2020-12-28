@@ -22,7 +22,7 @@
 <body>
 	${error }
 		<c:forEach var="i" items="${boardList }">
-			<a href="${root }readArticleList.do?boardName=${i }">${i }</a>
+			<a href="${root }/readArticleList.do?boardName=${i }">${i }</a>
 			<br />
 		</c:forEach>
 	
