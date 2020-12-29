@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="u" tagdir="/WEB-INF/tags/"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,11 +44,21 @@
 					<td>${a.preTitle }</td>
 					<td>
 						<a href="${root }/auth/readArticle.do?boardKey=${a.boardKey }">
-							${a.title }
+							<c:out value ="${a.title }" />
 						</a>
 					</td>
 					<td>${a.user_nickName }</td>
-					<td>${a.regDate }</td>
+					<td>
+					<jsp:useBean id="today" class="java.util.Date" />					
+					<fmt:formatDate var="to" value="${today}" pattern="yyyy-MM-dd"/>
+					<fmt:formatDate var="reg" value="${a.regDate}" pattern="yyyy-MM-dd"/>
+					<c:if test="${to eq reg }">
+						<fmt:formatDate value="${a.regDate}" pattern="HH:mm"/>
+					</c:if>
+					<c:if test="${to != reg }">
+						<fmt:formatDate value="${a.regDate}" pattern="MM-dd"/>
+					</c:if>
+					</td>
 					<td>${a.read_cnt }</td>
 					<td></td>
 				</tr>
@@ -56,10 +68,19 @@
 
 	</table>
 	
+	<!-- 페이징 -->
 	<br />
-	<c:forEach var="i" begin="1" end="${pageEnd }">
-		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${pageEnd-i+1}">${pageEnd-i+1 }</a>
+	<c:if test="${pageFirst >5 }">
+		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${pageFirst-1}">이전</a>
+	</c:if>
+	
+	<c:forEach var="i" begin="${ pageFirst}" end="${pageLast }">
+		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${i}">${i }</a>
 	</c:forEach>
+	
+	<c:if test="${pageLast < pageEnd}">
+		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${pageLast+1}">다음</a>	
+	</c:if>
 	<br />
 
 	<br />

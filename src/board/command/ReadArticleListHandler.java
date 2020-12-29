@@ -28,7 +28,7 @@ public class ReadArticleListHandler implements CommandHandler {
 		
 		int onePageNum = 10;
 		
-		int pageNum = totalNum / onePageNum + 1 ;
+		int pageNum = 1 ;
 		
 		if (req.getParameter("pageNum") != null) {
 			pageNum = Integer.parseInt(req.getParameter("pageNum"));
@@ -55,12 +55,22 @@ public class ReadArticleListHandler implements CommandHandler {
 			return "null";
 		}
 		
-		int pageEnd = totalNum / onePageNum +1 ;
-		
+		int pageEnd = (int) Math.ceil((totalNum / onePageNum) + (totalNum % onePageNum) * 0.1);
 		req.setAttribute("ArticleList", ArticleList);
 		req.setAttribute("pageNum", pageNum);
 		req.setAttribute("pageEnd", pageEnd);
-
+		
+		
+		int pageFirst = (pageNum-1)/5*5+1;
+		int pageLast = pageFirst+4;
+		if (pageLast >= pageEnd) {
+			pageLast = pageEnd;
+		}
+		
+		req.setAttribute("pageFirst", pageFirst);
+		req.setAttribute("pageLast", pageLast);
+		
+		
 		return FORM_VIEW;
 	}
 

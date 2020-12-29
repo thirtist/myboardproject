@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="u" tagdir="/WEB-INF/tags/"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,7 +32,12 @@ $(function(){
 			location.href = "${root}/auth/deleteArticle.do?boardKey=${uar.boardKey }&boardName=${uar.boardName}";
 		} else {
 			return;
-}
+		}
+	});
+	
+ 	$("span").click(function() {
+		var key = $(this).attr("data-key");
+		$(key).removeAttr("hidden");
 	});
 	
 	
@@ -40,7 +47,7 @@ $(function(){
 <title>Insert title here</title>
 </head>
 <body>
-
+<div class="container" >
 <form action="${root }/auth/readArticle.do?boardKey=${uar.boardKey}" method="post">
 
 		<input type="text" name ="boardName" value="${uar.boardName }" hidden/>
@@ -65,8 +72,44 @@ $(function(){
 		<c:if test="${NotMatchIdException }">글작성자가 일치하지 않습니다</c:if>
 
 	</form>
-
+	
+	<br />
+	
+	
+	<c:forEach var = "rep" items="${replyList }">
+		<c:out value ="${rep.user_nickName }" />
+		
+		<span style="cursor: pointer;" data-key='#r${rep.replyKey }'>
+			<c:out value ="${rep.reply }" />
+		</span>
+		
+		<fmt:formatDate value="${rep.regDate }" pattern="MM-dd HH:mm:ss"/>
+		<br />
+		<div id="r${rep.replyKey }" hidden>
+			<form action="${root }/auth/createReply.do?boardKey=${uar.boardKey}" method="post">
+			<textarea style="resize: none;" name = reply rows="3" cols="50" ></textarea>
+			<br />
+			<button>댓글입력</button>
+			<c:if test="${param.replyEmpty }">댓글이 비엇습니다</c:if>
+			</form>
+		</div>
+		
+	</c:forEach>
+		
+	
+	
+	<form action="${root }/auth/createReply.do?boardKey=${uar.boardKey}" method="post">
+		
+		<textarea style="resize: none;" name = reply rows="3" cols="50" ></textarea>
+		<br />
+		<button>댓글입력</button>
+		<c:if test="${param.replyEmpty }">댓글이 비엇습니다</c:if>
+		
+	</form>
+	
+	
 	
 
+</div>
 </body>
 </html>

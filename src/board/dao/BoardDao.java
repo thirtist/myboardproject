@@ -88,7 +88,7 @@ public class BoardDao {
 		
 		String sql = "SELECT rn, boardKey, boardName, articleno, preTitle, title, CONTENT, user_id, user_nickName, regDate, moddate, read_cnt FROM "
 				+ "(SELECT ROWNUM rn, boardKey, boardName, articleno, preTitle, title, CONTENT, user_id, user_nickName, regDate, moddate, read_cnt "
-				+ "FROM (SELECT * FROM board WHERE BOARDNAME = ? ORDER BY ARTICLENO) ORDER BY rn DESC) WHERE rn BETWEEN ? and ?";
+				+ "FROM (SELECT * FROM board WHERE BOARDNAME = ? ORDER BY ARTICLENO DESC) ORDER BY rn ) WHERE rn BETWEEN ? and ?";
 		List<Board> list = new ArrayList<Board>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

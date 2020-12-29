@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,12 +17,15 @@ import article.service.UpdateArticleService;
 import auth.service.User;
 import board.model.Board;
 import mvc.command.CommandHandler;
+import reply.model.Reply;
+import reply.service.ReadReplyService;
 
 public class ReadArticleHandler implements CommandHandler {
 	private final String FORM_VIEW = "readArticleForm";
 	ReadArticleService readArticleService = new ReadArticleService();
 	UpdateArticleService updateArticleService = new UpdateArticleService();
-	
+	ReadReplyService rrs = new ReadReplyService();
+		
 	@Override
 	public String process(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
@@ -38,9 +42,7 @@ public class ReadArticleHandler implements CommandHandler {
 	private String processGet(HttpServletRequest req, HttpServletResponse res) {
 
 		String boardKey = req.getParameter("boardKey");
-		
-		
-		
+				
 		User user = (User) req.getSession().getAttribute("authUser");
 		Board board = null;
 
@@ -84,7 +86,21 @@ public class ReadArticleHandler implements CommandHandler {
 		UpdateArticleRequest uar = new UpdateArticleRequest(
 				boardKey2, preTitle, title, content, user_id, boardName
 				);
+		
 		req.setAttribute("uar", uar);
+		
+		
+		/*reply*/
+		List<Reply> replyList = null;
+		try {
+			replyList = rrs.readReply(boardKey2);
+		} catch (SQLException e) {
+			req.setAttribute("error", "readReply SQL에러");
+			e.printStackTrace();
+			return "null";
+		}
+		req.setAttribute("replyList", replyList);
+		
 		
 		return FORM_VIEW;
 
