@@ -22,13 +22,13 @@
 <title>Insert title here</title>
 </head>
 <body>
-
 <div class="container">
 	<table>
 		<thead>
 			<tr>
 				<th>번호</th>
-				<th>말머리</th>
+				<th>개념</th>
+				<th>분류</th>
 				<th>제목</th>
 				<th>글쓴이</th>
 				<th>작성일</th>
@@ -39,12 +39,14 @@
 		<tbody>
 			<c:forEach var="a" items="${ArticleList }">
 				<tr>
-
+					<u:recommandNum boardKey="${a.boardKey }"></u:recommandNum>
 					<td>${a.articleNo }</td>
+					<td><c:if test="${recommandNum >2}">추천</c:if></td>
 					<td>${a.preTitle }</td>
 					<td>
 						<a href="${root }/auth/readArticle.do?boardKey=${a.boardKey }">
 							<c:out value ="${a.title }" />
+							<u:replyNum boardKey="${a.boardKey }"></u:replyNum>
 						</a>
 					</td>
 					<td>${a.user_nickName }</td>
@@ -60,7 +62,8 @@
 					</c:if>
 					</td>
 					<td>${a.read_cnt }</td>
-					<td></td>
+					<td>${recommandNum }</td> <!--recommandNum.tag에서 가져옴  -->
+					
 				</tr>
 			</c:forEach>
 

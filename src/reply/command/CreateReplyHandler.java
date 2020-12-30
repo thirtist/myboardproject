@@ -30,12 +30,8 @@ public class CreateReplyHandler implements CommandHandler{
 
 	private String processGet(HttpServletRequest req, HttpServletResponse res) {
 					
-		return "null";
-	}
-
-	private String processPost(HttpServletRequest req, HttpServletResponse res) {
-		
 		User user = (User) req.getSession().getAttribute("authUser");
+		String boardName = req.getParameter("boardName");
 		String boardKey =req.getParameter("boardKey");
 		String reply = req.getParameter("reply");
 		
@@ -59,10 +55,61 @@ public class CreateReplyHandler implements CommandHandler{
 		}
 
 		try {
-			createReplyService.createReply(boardKeyI, user, reply);
+			createReplyService.createReply(boardKeyI, boardName, user, reply);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			req.setAttribute("error", "createReply SQL에러");
+			return "null";
+		}
+
+		try {
+			res.sendRedirect(req.getContextPath()+"/auth/readArticle.do?boardKey="+boardKey);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "null";
+		}
+		
+		return null;
+	}
+
+	private String processPost(HttpServletRequest req, HttpServletResponse res) {
+		
+		User user = (User) req.getSession().getAttribute("authUser");
+		String boardKey =req.getParameter("boardKey");
+		String replyKey =req.getParameter("replyKey");
+		String reply2 = req.getParameter("reply2");
+		String boardName = req.getParameter("boardName");
+		
+		Map<String, Boolean> errors = new HashMap<>();
+		req.setAttribute("errors", errors);
+		
+		if(boardKey == null || boardKey.isEmpty()) {
+			req.setAttribute("error", "boardKey를 못찾아서 리플못담");
+			return "null";
+		}
+		int boardKeyI = Integer.parseInt(boardKey);
+		
+		if(replyKey == null || replyKey.isEmpty()) {
+			req.setAttribute("error", "replyKey를 못찾아서 리플못담");
+			return "null";
+		}
+		int replyKeyI = Integer.parseInt(replyKey);
+		
+		if(reply2 == null || reply2.isEmpty()) {
+			try {
+				res.sendRedirect(req.getContextPath()+"/auth/readArticle.do?boardKey="+boardKey);
+				return null;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+
+		try {
+			createReplyService.createSubReply(replyKeyI, boardKeyI, boardName, user, reply2);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			req.setAttribute("error", "createSubReply SQL에러");
 			return "null";
 		}
 

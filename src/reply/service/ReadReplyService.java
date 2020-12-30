@@ -26,4 +26,20 @@ public class ReadReplyService {
 		
 		return list;
 	}
+	
+	public int getReplyNum(int boardKey) throws SQLException {
+		Connection con = ConnectionProvider.getConnection();
+		
+		int replyNum = 0;
+		try {
+
+			replyNum =replyDao.getReplyNumByBoardKey(con, boardKey);
+
+		} finally {
+			JdbcUtil.close(con);
+		}
+		
+		return replyNum;
+	}
+	
 }

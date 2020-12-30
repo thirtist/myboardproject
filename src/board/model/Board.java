@@ -118,9 +118,7 @@ public class Board {
 
 	public void setRead_cnt(int read_cnt) {
 		this.read_cnt = read_cnt;
-	}
-	
-	
+	}	
 	
 	
 }

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import article.service.NotMatchIdException;
 import article.service.ReadArticleService;
+import article.service.RecommandArticleService;
 import article.service.UpdateArticleRequest;
 import article.service.UpdateArticleService;
 import auth.service.User;
@@ -25,7 +26,8 @@ public class ReadArticleHandler implements CommandHandler {
 	ReadArticleService readArticleService = new ReadArticleService();
 	UpdateArticleService updateArticleService = new UpdateArticleService();
 	ReadReplyService rrs = new ReadReplyService();
-		
+
+	
 	@Override
 	public String process(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
@@ -55,10 +57,10 @@ public class ReadArticleHandler implements CommandHandler {
 			return null;
 		}
 
-		int boardKey2 = Integer.parseInt(boardKey);
+		int boardKeyI = Integer.parseInt(boardKey);
 		
 		try {
-			board = readArticleService.readArticle(boardKey2);
+			board = readArticleService.readArticle(boardKeyI);
 		} catch (NumberFormatException e) {
 			req.setAttribute("error", "boardKey를 int로 변환할 수 없음");
 			e.printStackTrace();
@@ -84,7 +86,7 @@ public class ReadArticleHandler implements CommandHandler {
 		String user_id = user.getId();
 		String boardName = board.getBoardName();
 		UpdateArticleRequest uar = new UpdateArticleRequest(
-				boardKey2, preTitle, title, content, user_id, boardName
+				boardKeyI, preTitle, title, content, user_id, boardName
 				);
 		
 		req.setAttribute("uar", uar);
@@ -93,14 +95,13 @@ public class ReadArticleHandler implements CommandHandler {
 		/*reply*/
 		List<Reply> replyList = null;
 		try {
-			replyList = rrs.readReply(boardKey2);
+			replyList = rrs.readReply(boardKeyI);
 		} catch (SQLException e) {
 			req.setAttribute("error", "readReply SQL에러");
 			e.printStackTrace();
 			return "null";
 		}
 		req.setAttribute("replyList", replyList);
-		
 		
 		return FORM_VIEW;
 

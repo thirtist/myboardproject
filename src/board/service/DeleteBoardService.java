@@ -8,10 +8,12 @@ import board.command.NotFoundBoardNameException;
 import board.dao.BoardDao;
 import jdbc.ConnectionProvider;
 import jdbc.JdbcUtil;
+import reply.dao.ReplyDao;
 
 public class DeleteBoardService {
 	BoardDao boardDao = new BoardDao();
-	
+	ReplyDao replyDao = new ReplyDao();
+
 	public void deleteBoard(String boardName) throws SQLException {
 		Connection con = ConnectionProvider.getConnection();
 		try {
@@ -28,9 +30,16 @@ public class DeleteBoardService {
 				JdbcUtil.rollback(con);
 				throw e;
 			}
-			
+
 			try {
 				boardDao.deleteSeq(con, boardName);
+			} catch (SQLException e) {
+				JdbcUtil.rollback(con);
+				throw e;
+			}
+
+			try {
+				replyDao.deleteReplyByBoardName(con, boardName);
 			} catch (SQLException e) {
 				JdbcUtil.rollback(con);
 				throw e;
@@ -40,7 +49,7 @@ public class DeleteBoardService {
 		} finally {
 			JdbcUtil.close(con);
 		}
-		
+
 	}
 
 }
