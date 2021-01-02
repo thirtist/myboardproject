@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="u" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,27 +17,22 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<div class="container">
+	
+	<u:navbar></u:navbar>
 
-<c:if test="${!empty authUser }">
-<h1>${authUser.nickName }님 환영합니다</h1>
-<a href="${root }/auth/logout.do">로그아웃</a>
-<a href="${root }/auth/check/changeMemberInfo.do">회원정보수정</a>
-<a href="${root }/auth/check/deleteMember.do">회원탈퇴</a>
- 	<c:if test="${authUser.id == 'admin' }">
-		<a href="${root }/admin/boardControl.do">게시판관리</a>
- 	</c:if>
-</c:if>
-
-
-<c:if test="${empty authUser }">
-	<a href="${root}/join.do">회원가입</a>
-	<a href="${root}/login.do">로그인</a>
-	<a href="${root}/findId.do">아이디찾기</a>
-	<a href="${root}/findPassword.do">패스워드찾기</a>
-</c:if>
-
-<br />
-<a href="${root }/readBoardList.do">게시판리스트</a>
-
+	<div class="row">
+		<div class="col-4">
+				다른거1
+		</div>
+		<div class="col-4">
+			다른거2
+		</div>
+	
+		<div class="d-flex col-4 justify-content-end">
+			<u:logInBar></u:logInBar>
+		</div>	
+	</div>
+</div>
 </body>
 </html>

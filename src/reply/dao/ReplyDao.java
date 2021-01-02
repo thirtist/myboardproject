@@ -49,6 +49,7 @@ public class ReplyDao {
 		
 	}
 	
+	/*
 	public List<Reply> readReplyByBoardKey(Connection con, int boardKey) throws SQLException {
 
 		String sql = "SELECT * FROM reply_mbp WHERE boardkey = ? ORDER BY REPLYKEY, dep, regdate";
@@ -88,6 +89,53 @@ public class ReplyDao {
 
 		return list;
 	}
+	*/
+	
+	public List<Reply> readReplyByBoardKey(Connection con, int boardKey, int pageNum, int onePageNum) throws SQLException {
+
+		String sql = "SELECT rn, replykey, dep, boardKey, boardName, user_id, user_nickName, reply, regDate, moddate, replyprimaryKey FROM "
+					+"(SELECT ROWNUM rn, replykey, dep, boardKey, boardName, user_id, user_nickName, reply, regDate, moddate, replyprimaryKey "
+					+"FROM (SELECT * FROM reply_mbp WHERE BOARDKEY = ? ORDER BY REPLYKEY, dep, regdate) ORDER BY rn ) WHERE rn BETWEEN ? and ?";
+
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Reply> list = new ArrayList<>();
+
+		try {
+
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, boardKey);
+			pstmt.setInt(2, pageNum * onePageNum - onePageNum + 1);
+			pstmt.setInt(3, pageNum * onePageNum);
+			
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+
+				int replyKey = rs.getInt("REPLYKEY");
+				int depth = rs.getInt("DEP");
+				boardKey = rs.getInt("BOARDKEY");
+				String boardName = rs.getString("BOARDNAME");
+				String user_id = rs.getString("USER_ID");
+				String user_nickName = rs.getString("USER_NICKNAME");
+				String reply = rs.getString("REPLY");
+				Date regDate = rs.getTimestamp("REGDATE");
+				Date modDate = rs.getTimestamp("MODDATE");
+				int replyPrimaryKey = rs.getInt("REPLYPRIMARYKEY");
+				
+				Reply rep = new Reply(replyKey, depth, boardKey, boardName, user_id,
+						user_nickName, reply, regDate, modDate, replyPrimaryKey);
+				list.add(rep);
+			}
+
+		} finally {
+			JdbcUtil.close(rs, pstmt);
+		}
+
+		return list;
+	}
+	
+	
 
 	public Reply readReplyByReplyPrimaryKey(Connection con, int replyPrimaryKey) throws SQLException {
 		String sql = "SELECT * FROM reply_mbp WHERE replyPrimaryKey = ?";

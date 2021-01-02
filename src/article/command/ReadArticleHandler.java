@@ -44,7 +44,8 @@ public class ReadArticleHandler implements CommandHandler {
 	private String processGet(HttpServletRequest req, HttpServletResponse res) {
 
 		String boardKey = req.getParameter("boardKey");
-				
+		req.setAttribute("boardKey", boardKey);
+		
 		User user = (User) req.getSession().getAttribute("authUser");
 		Board board = null;
 
@@ -92,7 +93,7 @@ public class ReadArticleHandler implements CommandHandler {
 		req.setAttribute("uar", uar);
 		
 		
-		/*reply*/
+		/*reply
 		List<Reply> replyList = null;
 		try {
 			replyList = rrs.readReply(boardKeyI);
@@ -102,6 +103,47 @@ public class ReadArticleHandler implements CommandHandler {
 			return "null";
 		}
 		req.setAttribute("replyList", replyList);
+		*/
+		/* reply페이징 */
+		int totalNum = 0;
+		try {
+			totalNum = rrs.getReplyNum(boardKeyI);
+		} catch (SQLException e1) {
+			req.setAttribute("error", "getReplyNum에러");
+			e1.printStackTrace();
+			return "null";
+		}
+		int onePageNum = 10;
+		int pageNum = 1 ;
+		if (req.getParameter("pageNum") != null) {
+			pageNum = Integer.parseInt(req.getParameter("pageNum"));
+		}
+		
+		List<Reply> replyList = null;
+		
+		try {
+			replyList = rrs.readReply(boardKeyI, pageNum, onePageNum);
+			
+		} catch (SQLException e) {
+			req.setAttribute("error", "getReplyList에러");
+			e.printStackTrace();
+			return "null";
+		}
+		req.setAttribute("replyList", replyList);
+		
+		int pageEnd = (int) Math.ceil((totalNum / onePageNum) + (totalNum % onePageNum) * 0.1);
+		req.setAttribute("replyList", replyList);
+		req.setAttribute("pageNum", pageNum);
+		req.setAttribute("pageEnd", pageEnd);
+		
+		int pageFirst = (pageNum-1)/5*5+1;
+		int pageLast = pageFirst+4;
+		if (pageLast >= pageEnd) {
+			pageLast = pageEnd;
+		}
+		req.setAttribute("pageFirst", pageFirst);
+		req.setAttribute("pageLast", pageLast);
+		
 		
 		return FORM_VIEW;
 
@@ -143,9 +185,9 @@ public class ReadArticleHandler implements CommandHandler {
 			return "null";
 		}
 		
-		boardName = URLEncoder.encode(boardName);
+		/* boardName = URLEncoder.encode(boardName); */
 		try {
-			res.sendRedirect(req.getContextPath()+"/readArticleList.do?boardName="+boardName);
+			res.sendRedirect(req.getContextPath()+"/auth/readArticle.do?boardKey="+boardKey);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -16,7 +16,7 @@ public class ReadArticleListHandler implements CommandHandler {
 	ReadArticleListService readArticleListService = new ReadArticleListService();
 
 	@Override
-	public String process(HttpServletRequest req, HttpServletResponse res) throws Exception {
+	public String process(HttpServletRequest req, HttpServletResponse res) {
 
 		String boardName = req.getParameter("boardName");
 		req.setAttribute("boardName",boardName);
@@ -24,9 +24,22 @@ public class ReadArticleListHandler implements CommandHandler {
 		
 		int totalNum = 0;
 		
-		totalNum = readArticleListService.getTotalArticle(boardName);
+		try {
+			totalNum = readArticleListService.getTotalArticle(boardName);
+		} catch (SQLException e1) {
+			req.setAttribute("error", "getTotalArticle SQL에러");
+			e1.printStackTrace();
+			return "null";
+		}
 		
-		int onePageNum = 10;
+		
+		String onePageNumS = req.getParameter("onePageNum");
+		if(onePageNumS==null || onePageNumS.isEmpty()) {
+			onePageNumS="10";
+		}
+		int onePageNum = Integer.parseInt(onePageNumS);
+		req.setAttribute("onePageNum", onePageNum);
+		
 		
 		int pageNum = 1 ;
 		
@@ -44,22 +57,24 @@ public class ReadArticleListHandler implements CommandHandler {
 			return null;
 		}
 
-		List<Board> ArticleList = null;
+		List<Board> articleList = null;
 		
 		try {
-			ArticleList = readArticleListService.getArticleList(boardName, pageNum, onePageNum);
+			articleList = readArticleListService.getArticleList(boardName, pageNum, onePageNum);
 			
 		} catch (SQLException e) {
-			req.setAttribute("error", "getArticleList에러");
+			req.setAttribute("error", "getArticleList SQL에러");
 			e.printStackTrace();
 			return "null";
 		}
 		
-		int pageEnd = (int) Math.ceil((totalNum / onePageNum) + (totalNum % onePageNum) * 0.1);
-		req.setAttribute("ArticleList", ArticleList);
+		double totalNumDouble = (double) totalNum;
+		double totalOnePageNum = (double) onePageNum;
+		
+		int pageEnd = (int) Math.ceil(totalNumDouble / totalOnePageNum);
+		req.setAttribute("ArticleList", articleList);
 		req.setAttribute("pageNum", pageNum);
 		req.setAttribute("pageEnd", pageEnd);
-		
 		
 		int pageFirst = (pageNum-1)/5*5+1;
 		int pageLast = pageFirst+4;

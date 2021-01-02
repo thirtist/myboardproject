@@ -65,12 +65,42 @@ $(function(){
 });
 </script>
 
+<style>
+#btn_recommand {
+  background-color: #28AEFF;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+</style>
+
 <title>Insert title here</title>
 </head>
 <body>
-<div class="container" >
-<form action="${root }/auth/readArticle.do?boardKey=${uar.boardKey}" method="post">
 
+<div class="container mb-3" >
+<u:navbar></u:navbar>
+
+<div class="row">
+
+	<div class="col-2">
+	</div>
+	
+	<div class="col-md-8">
+	
+	<div class="d-flex justify-content-start">
+		<a class="h3" href="${root }/readArticleList.do?boardName=${uar.boardName }">${uar.boardName } 게시판</a>
+	</div>
+		<br />
+
+	<form action="${root }/auth/readArticle.do?boardKey=${uar.boardKey}" method="post">
 		<input type="text" name ="boardName" value="${uar.boardName }" hidden/>
 		말머리
 		<input id="input1" size="5" name = preTitle type="text" value="${uar.preTitle }" readonly/>	
@@ -80,67 +110,113 @@ $(function(){
 		<br />
 		내용
 		<br />
-		<textarea id="textarea1" style="resize: none;" name = content rows="10" cols="50" readonly>${uar.content }</textarea>
+		<textarea class="col" id="textarea1" style="resize: none;" name = content rows="10" cols="100%" readonly>${uar.content }</textarea>
 		<c:if test="${errors.content }">내용을 입력하세요</c:if>
+		<br /><br />
+		<div style="text-align:center">
+			<u:recommandNum boardKey="${uar.boardKey }"></u:recommandNum>
+			<div class="h3">${recommandNum }</div>
+			<button id="btn_recommand" type="button"><i class="far fa-star"></i> <br />추천</button>
+		</div>
+		<div class="d-flex justify-content-end">
+			<button id="btn_submit" class="btn btn-secondary ml-1" hidden="true">수정하기</button>
+		</div>
 		<br />
-		<button id="btn_recommand" type="button">추천하기</button>
-		추천수 : <u:recommandNum boardKey="${uar.boardKey }"></u:recommandNum> ${recommandNum }
 		
-		<c:if test="${sameUser }">		
-			<button id="btn_mod" type="button">수정하기</button>
-			<button id="btn_submit" hidden="true">수정</button>
-			<button id="btn_delete" type="button">삭제하기</button>
-			<br />
-			<br />
-		</c:if>
-		
-		<c:if test="${NotMatchIdException }">글작성자가 일치하지 않습니다</c:if>
-
 	</form>
 	
 	<br />
 	
-	
+	<div class="row">
 	<c:forEach var = "rep" items="${replyList }">
-		<c:if test="${rep.depth == 1 }">&nbsp;&nbsp;&nbsp;<i class='fas fa-chevron-right'></i></c:if>
-		<c:out value ="${rep.user_nickName }" />
+		<div class="col-2">
+			<c:if test="${rep.depth == 1 }">&nbsp;&nbsp;&nbsp;<i class='fas fa-chevron-right'></i></c:if>
+			<c:out value ="${rep.user_nickName }" />
+		</div>
 		
-		<span style="cursor: pointer;" data-key='#r${rep.replyKey }'>
-			<c:out value ="${rep.reply }" />
-		</span>
+		<div class="col-8">
+			<span style="cursor: pointer;" data-key='#r${rep.replyKey }'>
+				<c:out value ="${rep.reply }" />
+			</span>
+		</div>
 		
-		<fmt:formatDate value="${rep.regDate }" pattern="MM-dd HH:mm:ss"/>
-		<c:if test="${authUser.id eq rep.user_id }">
-			<button type="button" onclick="location.href='${root}/auth/deleteReply.do?replyPrimaryKey=${rep.replyPrimaryKey }&boardKey=${uar.boardKey}'">삭제</button>
-		</c:if>
+		<div class="col-2 d-flex justify-content-end align-items-center">
+			<fmt:formatDate value="${rep.regDate }" pattern="MM-dd HH:mm:ss"/>
+			<c:if test="${authUser.id eq rep.user_id }">
+				<button class="btn btn-secondary m-1" style="font-size:5px" type="button" onclick="location.href='${root}/auth/deleteReply.do?replyPrimaryKey=${rep.replyPrimaryKey }&boardKey=${uar.boardKey}&pageNum=${param.pageNum}'">X</button>
+			</c:if>
+		</div>
+		
 		<br />
+		
 		<!--대댓글입력창  -->
 		<div id="r${rep.replyKey }" hidden>
-			<form action="${root }/auth/createReply.do?boardKey=${uar.boardKey}&boardName=${uar.boardName}&replyKey=${rep.replyKey}" method="post">
-			<textarea id="sub_textarea"style="resize: none;" name = reply2 rows="3" cols="50" ></textarea>
+			<form action="${root }/auth/createReply.do?boardKey=${uar.boardKey}&boardName=${uar.boardName}&replyKey=${rep.replyKey}&pageNum=${param.pageNum}" method="post">
+			<textarea id="sub_textarea"style="resize: none;" name = reply2 rows="3" cols="97%" ></textarea>
 			<br />
-			<button id="sub_btn">대댓글입력</button>
+			<div class="d-flex justify-content-end">
+				<button id="sub_btn" class="btn btn-primary">대댓글입력</button>
+			</div>
 			</form>
 		</div>
 		
 	</c:forEach>
-		
-	<br />
-	<br />
+	</div>
 	
+	<!-- 리플페이징 -->
+	<div class="d-flex justify-content-center">
+	<br />
+	<c:if test="${pageFirst >5 }">
+		<a href="${root }/auth/readArticle.do?boardKey=${boardKey}&pageNum=${pageFirst-1}">이전</a>
+	</c:if>
+	
+	<c:forEach var="i" begin="${ pageFirst}" end="${pageLast }">
+		<a href="${root }/auth/readArticle.do?boardKey=${boardKey}&pageNum=${i}">${i }</a>
+	</c:forEach>
+	
+	<c:if test="${pageLast < pageEnd}">
+		<a href="${root }/auth/readArticle.do?boardKey=${boardKey}&pageNum=${pageLast+1}">다음</a>	
+	</c:if>
+	<br />
+	</div>
+	<!-- 리플페이징끝 -->
+
+	
+	<br />
 	<form action="${root }/auth/createReply.do" method="get">
 		<input type="text" hidden name="boardKey" value="${uar.boardKey }" />
 		<input type="text" hidden name="boardName" value="${uar.boardName }" />
-		<textarea style="resize: none;" name = reply rows="3" cols="50" ></textarea>
+		<textarea class="col" style="resize: none;" name = reply rows="3" cols="100%" ></textarea>
 		<br />
-		<button>댓글입력</button>
+		<div class="d-flex justify-content-end ">
+			<button class="btn btn-primary">댓글입력</button>
+		</div>
 		<c:if test="${param.replyEmpty }">댓글이 비었습니다</c:if>
 		
 	</form>
 	
+	<br />
 	
 	
+	
+	<form action="${root }/auth/writeArticle.do">
+	<input type="text" name="boardName" value = "${uar.boardName}"hidden="true"/>
+	<div class="d-flex justify-content-end ">
+		<c:if test="${sameUser }">		
 
+			<button id="btn_mod" class="btn btn-secondary ml-1" type="button">수정하기</button>
+			<button id="btn_delete" class="btn btn-secondary ml-1" type="button">삭제하기</button>
+		</c:if>
+		<button class="btn btn-primary mx-1">글쓰기</button>
+		<c:if test="${NotMatchIdException }"><br />글작성자가 일치하지 않습니다</c:if>		
+	</div>
+	</form>
+
+	</div>	
+	
+		<div class="col-2">
+		</div>
+	</div>
 </div>
 </body>
 </html>

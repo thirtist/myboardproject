@@ -80,6 +80,11 @@ public class CreateReplyHandler implements CommandHandler{
 		String reply2 = req.getParameter("reply2");
 		String boardName = req.getParameter("boardName");
 		
+		String pageNum =req.getParameter("pageNum");
+		if(pageNum == null || pageNum.isEmpty()) {
+			pageNum = "1";
+		}
+		
 		Map<String, Boolean> errors = new HashMap<>();
 		req.setAttribute("errors", errors);
 		
@@ -104,7 +109,6 @@ public class CreateReplyHandler implements CommandHandler{
 			}
 		}
 		
-
 		try {
 			createReplyService.createSubReply(replyKeyI, boardKeyI, boardName, user, reply2);
 		} catch (SQLException e) {
@@ -114,11 +118,12 @@ public class CreateReplyHandler implements CommandHandler{
 		}
 
 		try {
-			res.sendRedirect(req.getContextPath()+"/auth/readArticle.do?boardKey="+boardKey);
+			res.sendRedirect(req.getContextPath()+"/auth/readArticle.do?boardKey="+boardKey+"&pageNum="+pageNum);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "null";
 		}
+		
 		
 		return null;
 	}

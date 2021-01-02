@@ -12,6 +12,7 @@ import reply.model.Reply;
 public class ReadReplyService {
 	ReplyDao replyDao = new ReplyDao();
 
+	/*
 	public List<Reply> readReply(int boardKey) throws SQLException {
 		Connection con = ConnectionProvider.getConnection();
 		
@@ -26,6 +27,23 @@ public class ReadReplyService {
 		
 		return list;
 	}
+	*/
+	
+	public List<Reply> readReply(int boardKey, int pageNum, int onePageNum) throws SQLException {
+		Connection con = ConnectionProvider.getConnection();
+		
+		List<Reply> list = null;
+		try {
+
+			list =replyDao.readReplyByBoardKey(con, boardKey, pageNum, onePageNum);
+
+		} finally {
+			JdbcUtil.close(con);
+		}
+		
+		return list;
+	}
+	
 	
 	public int getReplyNum(int boardKey) throws SQLException {
 		Connection con = ConnectionProvider.getConnection();

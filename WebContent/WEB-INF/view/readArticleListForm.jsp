@@ -19,21 +19,79 @@
 
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
+<script>
+$(function(){
+	
+	var opn = $(onePageNumPass).val();
+	console.log(opn);
+	$("#selectPageNum option[value="+opn+"]").attr("selected","true");
+
+	
+});
+</script>
+
+<style type="text/css">
+ .table_all {
+ 	font-size:12px;
+ 	text-align:center;
+ }
+ .table_all .table_left {
+ 	text-align:left;
+ }
+ .table_all .table_right {
+ 	text-align:right;
+ }
+ 
+ a {
+ 	color : black;
+ }
+ 
+ a:link {
+ 	text-decoration: none;
+ }
+ 
+</style>
+
 <title>Insert title here</title>
 </head>
 <body>
+
 <div class="container">
-	<table>
+
+<u:navbar></u:navbar>
+
+<div class="row table_all">
+
+	<div class="col-2">
+	</div>
+	
+	<div class="col-md-8">
+	
+	<div class="d-flex justify-content-start">
+		<a class="h3" href="${root }/readArticleList.do?boardName=${param.boardName }">${param.boardName } 게시판</a>
+	</div>
+	
+	<form action="${root }/readArticleList.do" class="table_right mb-2">
+		<input type="text" hidden name="boardName" value="${param.boardName}"/>
+		<input id ="onePageNumPass" hidden value="${param.onePageNum }">
+		<select id="selectPageNum" name="onePageNum" onchange="submit()" >
+			<option value="10">10개</option>
+			<option value="30">30개</option>
+			<option value="50">50개</option>
+		</select>
+	</form>
+		
+	<table class="table">
 		<thead>
 			<tr>
-				<th>번호</th>
-				<th>개념</th>
-				<th>분류</th>
-				<th>제목</th>
-				<th>글쓴이</th>
-				<th>작성일</th>
-				<th>조회</th>
-				<th>추천수</th>
+				<th scope="col">번호</th>
+				<th scope="col">말머리</th>
+				<th scope="col" class="px-0"></th>
+				<th scope="col">제목</th>
+				<th scope="col">글쓴이</th>
+				<th scope="col">작성일</th>
+				<th scope="col">조회</th>
+				<th scope="col">추천수</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -41,9 +99,14 @@
 				<tr>
 					<u:recommandNum boardKey="${a.boardKey }"></u:recommandNum>
 					<td>${a.articleNo }</td>
-					<td><c:if test="${recommandNum >2}">추천</c:if></td>
 					<td>${a.preTitle }</td>
-					<td>
+					<td class="px-0"><c:if test="${recommandNum >2}">
+						<span style="font-size: 12px; color: Dodgerblue;">
+						<i class="fas fa-star"></i>
+						</span>
+						</c:if>
+					</td>
+					<td class="table_left">
 						<a href="${root }/auth/readArticle.do?boardKey=${a.boardKey }">
 							<c:out value ="${a.title }" />
 							<u:replyNum boardKey="${a.boardKey }"></u:replyNum>
@@ -74,29 +137,30 @@
 	<!-- 페이징 -->
 	<br />
 	<c:if test="${pageFirst >5 }">
-		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${pageFirst-1}">이전</a>
+		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${pageFirst-1}&onePageNum=${param.onePageNum}">이전</a>
 	</c:if>
 	
 	<c:forEach var="i" begin="${ pageFirst}" end="${pageLast }">
-		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${i}">${i }</a>
+		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${i}&onePageNum=${param.onePageNum}">${i }</a>
 	</c:forEach>
 	
 	<c:if test="${pageLast < pageEnd}">
-		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${pageLast+1}">다음</a>	
+		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${pageLast+1}&onePageNum=${param.onePageNum}">다음</a>	
 	</c:if>
 	<br />
 
 	<br />
-	<form action="${root }/auth/writeArticle.do">
+	<form action="${root }/auth/writeArticle.do" class="table_right">
 	<input type="text" name="boardName" value = "${boardName}"hidden="true"/>
-		<button>글쓰기</button>
+		<button class="btn btn-primary">글쓰기</button>
 	</form>
+	</div>
 	
+	<div class="col-2">
+	</div>
 	
-	
-	
-
+</div> 
 </div>
-
+	
 </body>
 </html>

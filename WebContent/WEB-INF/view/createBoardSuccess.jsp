@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="u" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +17,24 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>보드 생성 성공</h1>
-<a href="${root }/admin/boardControl.do">게시판 관리로 돌아가기</a></body>
+
+<div class="container mb-3">
+<u:navbar></u:navbar>
+	<div class="row">
+		<div class="col-2">
+		</div>
+		
+		<div class="col-8">
+			<div>
+				보드 생성 성공
+			</div>
+			<br />
+			<a href="${root }/admin/boardControl.do">게시판 관리로 돌아가기</a>
+		</div>
+		
+		<div class="col-2">
+		</div>
+	</div>
+</div>
+</body>
 </html>

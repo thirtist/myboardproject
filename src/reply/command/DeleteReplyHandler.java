@@ -22,6 +22,11 @@ public class DeleteReplyHandler implements CommandHandler{
 		String replyPrimaryKey =req.getParameter("replyPrimaryKey");
 		String boardKey = req.getParameter("boardKey");
 		
+		String pageNum =req.getParameter("pageNum");
+		if(pageNum == null || pageNum.isEmpty()) {
+			pageNum = "1";
+		}
+		
 		if(replyPrimaryKey == null || replyPrimaryKey.isEmpty()) {
 			req.setAttribute("error", "replyPrimaryKey를 못찾아서 리플제거못함");
 			return "null";
@@ -45,7 +50,7 @@ public class DeleteReplyHandler implements CommandHandler{
 		} 
 
 		try {
-			res.sendRedirect(req.getContextPath()+"/auth/readArticle.do?boardKey="+boardKey);
+			res.sendRedirect(req.getContextPath()+"/auth/readArticle.do?boardKey="+boardKey+"&pageNum="+pageNum);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "null";
