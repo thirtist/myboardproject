@@ -85,16 +85,8 @@ $(function(){
 </head>
 <body>
 
-<div class="container mb-3" >
-<u:navbar></u:navbar>
+<u:page>
 
-<div class="row">
-
-	<div class="col-2">
-	</div>
-	
-	<div class="col-md-8">
-	
 	<div class="d-flex justify-content-start">
 		<a class="h3" href="${root }/readArticleList.do?boardName=${uar.boardName }">${uar.boardName } 게시판</a>
 	</div>
@@ -127,32 +119,37 @@ $(function(){
 	
 	<br />
 	
-	<div class="row">
+	<div class="row align-items-center">
 	<c:forEach var = "rep" items="${replyList }">
+		<hr>
 		<div class="col-2">
 			<c:if test="${rep.depth == 1 }">&nbsp;&nbsp;&nbsp;<i class='fas fa-chevron-right'></i></c:if>
 			<c:out value ="${rep.user_nickName }" />
 		</div>
 		
-		<div class="col-8">
+		<div class="col-7">
 			<span style="cursor: pointer;" data-key='#r${rep.replyKey }'>
 				<c:out value ="${rep.reply }" />
 			</span>
 		</div>
 		
-		<div class="col-2 d-flex justify-content-end align-items-center">
+		<div class="col-3 d-flex justify-content-end align-items-center">
+			<div class="col-11">
 			<fmt:formatDate value="${rep.regDate }" pattern="MM-dd HH:mm:ss"/>
+			</div>
+			<div class="col-1 d-flex">
 			<c:if test="${authUser.id eq rep.user_id }">
-				<button class="btn btn-secondary m-1" style="font-size:5px" type="button" onclick="location.href='${root}/auth/deleteReply.do?replyPrimaryKey=${rep.replyPrimaryKey }&boardKey=${uar.boardKey}&pageNum=${param.pageNum}'">X</button>
+				<button class="btn btn-secondary" style="font-size:5px" type="button" onclick="location.href='${root}/auth/deleteReply.do?replyPrimaryKey=${rep.replyPrimaryKey }&boardKey=${uar.boardKey}&pageNum=${param.pageNum}'">X</button>
 			</c:if>
+			</div>
 		</div>
 		
 		<br />
 		
 		<!--대댓글입력창  -->
-		<div id="r${rep.replyKey }" hidden>
+		<div id="r${rep.replyKey }" hidden class="container">
 			<form action="${root }/auth/createReply.do?boardKey=${uar.boardKey}&boardName=${uar.boardName}&replyKey=${rep.replyKey}&pageNum=${param.pageNum}" method="post">
-			<textarea id="sub_textarea"style="resize: none;" name = reply2 rows="3" cols="97%" ></textarea>
+			<textarea class="col" id="sub_textarea"style="resize: none;" name = reply2 rows="3" cols="133" ></textarea>
 			<br />
 			<div class="d-flex justify-content-end">
 				<button id="sub_btn" class="btn btn-primary">대댓글입력</button>
@@ -171,7 +168,9 @@ $(function(){
 	</c:if>
 	
 	<c:forEach var="i" begin="${ pageFirst}" end="${pageLast }">
-		<a href="${root }/auth/readArticle.do?boardKey=${boardKey}&pageNum=${i}">${i }</a>
+		<a href="${root }/auth/readArticle.do?boardKey=${boardKey}&pageNum=${i}">
+		<u:pageShape pageN="${pageNum }" pageNumI="${i }">${i }</u:pageShape>
+		</a>
 	</c:forEach>
 	
 	<c:if test="${pageLast < pageEnd}">
@@ -212,11 +211,7 @@ $(function(){
 	</div>
 	</form>
 
-	</div>	
-	
-		<div class="col-2">
-		</div>
-	</div>
-</div>
+</u:page>
+
 </body>
 </html>

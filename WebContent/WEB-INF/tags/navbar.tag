@@ -3,9 +3,9 @@
 <%@ taglib prefix="u" tagdir="/WEB-INF/tags" %>
 
 <div class="container mb-3" >	
-  <form class="form-inline mt-2 ml-3 justify-content-center">
+  <form class="form-inline mt-2 ml-3 justify-content-center" action="${root }/search.do">
 	<div class="navbar rounded-circle text-light bg-primary mr-5 h3 p-3">JAinside</div>
-      <input class="form-control mx-sm-4" size="50px" type="search" placeholder="게시판통합검색" aria-label="Search">
+      <input name="searchWord" class="form-control mx-sm-4" size="50px" type="search" placeholder="게시판통합검색" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
   </form>
 
@@ -29,12 +29,14 @@
         <a class="nav-link" href="${root }/admin/boardControl.do">게시판관리</a>
       </u:isAdmin>
       </li>
-      
-      <li class="nav-item">
       <u:isLogin>
-        <a class="nav-link" href="${root }/auth/check/changeMemberInfo.do">회원정보</a>
-      </u:isLogin>      
+      <li class="nav-item">
+        <a class="nav-link" href="${root }/auth/check/changeMemberInfo.do">회원정보수정</a>
       </li>
+      <li class="nav-item">    
+      	<a class="nav-link" href="${root }/auth/logout.do">로그아웃</a>
+      </li>
+      </u:isLogin>      
       
     </ul>
   </div>

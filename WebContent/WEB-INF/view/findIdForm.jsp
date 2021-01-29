@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="u" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,22 +17,28 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form action="${root }/findId.do" method="post">
 
+<u:page>
+
+<form action="${root }/findId.do" method="post">
+	<h1>아이디 찾기</h1>
 	<c:if test="${errors.NotMatchNameOrEmail }">
 	가입시 이메일과 이름이 일치하지 않습니다</c:if>
-	<br />
 	가입시 이메일
+	<br />
 	<input type="email" name="email" value="${param.email }"/>
 	<c:if test="${errors.email }">이메일을 입력하세요</c:if>
 	<c:if test="${errors.NotFoundEmailException }">등록된이메일이 없습니다</c:if>
 	<br />
 	가입 시 이름
+	<br />
 	<input type="text" name="name" value="${param.name }"/>
 	<c:if test="${errors.name }">이름를 입력하세요</c:if>
 	<br />
-	
-	<button>찾기</button>
+	<br />
+	<button class="btn btn-primary">찾기</button>
 </form>
+
+</u:page>
 </body>
 </html>

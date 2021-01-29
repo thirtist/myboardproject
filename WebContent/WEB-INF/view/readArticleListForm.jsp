@@ -56,21 +56,13 @@ $(function(){
 </head>
 <body>
 
-<div class="container">
+<u:page>
 
-<u:navbar></u:navbar>
-
-<div class="row table_all">
-
-	<div class="col-2">
-	</div>
-	
-	<div class="col-md-8">
-	
 	<div class="d-flex justify-content-start">
 		<a class="h3" href="${root }/readArticleList.do?boardName=${param.boardName }">${param.boardName } 게시판</a>
 	</div>
 	
+	<div class="table_all">
 	<form action="${root }/readArticleList.do" class="table_right mb-2">
 		<input type="text" hidden name="boardName" value="${param.boardName}"/>
 		<input id ="onePageNumPass" hidden value="${param.onePageNum }">
@@ -134,6 +126,7 @@ $(function(){
 
 	</table>
 	
+	
 	<!-- 페이징 -->
 	<br />
 	<c:if test="${pageFirst >5 }">
@@ -141,26 +134,41 @@ $(function(){
 	</c:if>
 	
 	<c:forEach var="i" begin="${ pageFirst}" end="${pageLast }">
-		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${i}&onePageNum=${param.onePageNum}">${i }</a>
+		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${i}&onePageNum=${param.onePageNum}">
+		<u:pageShape pageN="${pageNum }" pageNumI="${i }">${i }</u:pageShape>
+		</a>
 	</c:forEach>
 	
 	<c:if test="${pageLast < pageEnd}">
 		<a href="${root }/readArticleList.do?boardName=${boardName}&pageNum=${pageLast+1}&onePageNum=${param.onePageNum}">다음</a>	
 	</c:if>
 	<br />
-
+	
 	<br />
 	<form action="${root }/auth/writeArticle.do" class="table_right">
 	<input type="text" name="boardName" value = "${boardName}"hidden="true"/>
 		<button class="btn btn-primary">글쓰기</button>
 	</form>
+	
+	<br />
+	<form class="form-inline mt-2 ml-3 justify-content-center" action="${root }/searchInBoard.do">
+      <select class="form-control"name="searchMethod" id="">
+      	<!-- <option value="title_content">제목+내용</option> -->
+      	<option value="title">제목</option>
+      	<option value="content">내용</option>
+      	<option value="user_id">글쓴이</option>
+      </select>
+      <input name="searchWord" class="form-control mx-sm-4" size="50px" type="search" placeholder="게시판내 검색" aria-label="Search">
+      <input type="text" name="boardName" hidden value="${param.boardName }"/>
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
+  	</form>
+
+	
 	</div>
 	
-	<div class="col-2">
-	</div>
-	
-</div> 
-</div>
-	
+
+</u:page>
+
+		
 </body>
 </html>

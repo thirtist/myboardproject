@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="u" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +17,13 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="${root }/auth/writeArticle.do?boardName=${param.boardName}" method="post">
+<u:page>
+
+<div class="d-flex justify-content-start">
+		<a class="h3" href="${root }/readArticleList.do?boardName=${param.boardName }">${param.boardName } 게시판</a>
+	</div>
+
+		<form action="${root }/auth/writeArticle.do?boardName=${param.boardName}" method="post">
 		말머리
 		<input size="5" name = preTitle type="text" value="${param.preTitle }"/>	
 		제목
@@ -25,11 +32,13 @@
 		<br />
 		내용
 		<br />
-		<textarea style="resize: none;" name = content rows="10" cols="50" >${param.content }</textarea>
+		<textarea style="resize: none;" name = content rows="10" cols="133%" >${param.content }</textarea>
 		<c:if test="${errors.content }">내용을 입력하세요</c:if>
 		<br />
-		<button>글쓰기</button>
-
+		<div class="d-flex justify-content-end">
+		<button class="btn btn-primary">글쓰기</button>
+		</div>
 	</form>
+</u:page>
 </body>
 </html>

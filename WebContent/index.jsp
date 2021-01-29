@@ -17,22 +17,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<div class="container">
-	
-	<u:navbar></u:navbar>
+<%
 
-	<div class="row">
-		<div class="col-4">
-				다른거1
-		</div>
-		<div class="col-4">
-			다른거2
-		</div>
-	
-		<div class="d-flex col-4 justify-content-end">
-			<u:logInBar></u:logInBar>
-		</div>	
-	</div>
-</div>
+response.sendRedirect("main.do");
+
+%>
 </body>
 </html>

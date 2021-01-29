@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="u" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,23 +17,28 @@
 <title>Insert title here</title>
 </head>
 <body>
+
+<u:page>
+
 <h1>패스워드 찾기</h1>
 <form action="${root }/findPassword.do" method="post">
 	
 	<c:if test="${errors.NotMatchNameOrEmail }">
-	등록된 아이디의 이메일 또는 이름이 일치하지 않습니다</c:if>
-	<br />
+	등록된 아이디의 이메일 또는 이름이 일치하지 않습니다<br /></c:if>
 	아이디
+	<br />
 	<input type="text" name="id" value="${param.id }"/>
 	<c:if test="${errors.id }">아이디를 입력하세요</c:if>
 	<c:if test="${errors.NotFoundIdException }">등록된아이디가 없습니다</c:if>
 	<br />
 	이메일
+	<br />
 	<input type="email" name="email" value="${param.email }"/>
 	<c:if test="${errors.email }">이메일을 입력하세요</c:if>
 	<c:if test="${errors.NotFoundEmailException }">등록된이메일이 없습니다</c:if>
 	<br />
 	이름
+	<br />
 	<input type="text" name="name" value="${param.name }"/>
 	<c:if test="${errors.name }">이름를 입력하세요</c:if>
 	<br />
@@ -50,8 +56,9 @@
 	
 	</c:if>
 	<br />
-	<button>패스워드 찾기</button>
+	<button class="btn btn-primary">패스워드 찾기</button>
 </form>
 
+</u:page>
 </body>
 </html>

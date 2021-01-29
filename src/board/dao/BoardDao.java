@@ -149,4 +149,213 @@ public class BoardDao {
 		}
 	}
 
+	public List<Board> getArticleListBySeachWord(Connection con, String searchWord, int pageNum, int onePageNum) throws SQLException {
+		searchWord = searchWord.toUpperCase();
+		String sql = "SELECT rn, boardKey, boardName, articleno, preTitle, title, CONTENT, user_id, user_nickName, regDate, moddate, read_cnt FROM "
+				+ "(SELECT ROWNUM rn, boardKey, boardName, articleno, preTitle, title, CONTENT, user_id, user_nickName, regDate, moddate, read_cnt "
+				+ "FROM (SELECT * FROM board WHERE (UPPER(CONTENT) LIKE '%"+searchWord+"%' or UPPER(TITLE) LIKE '%"+searchWord+"%') ORDER BY regDate DESC) ORDER BY rn ) WHERE rn BETWEEN ? and ?";
+		List<Board> list = new ArrayList<Board>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pageNum * onePageNum - onePageNum + 1);
+			pstmt.setInt(2, pageNum * onePageNum);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+
+				int boardKey = rs.getInt("BOARDKEY");
+				String boardName = rs.getString("BOARDNAME");
+				int articleNo = rs.getInt("ARTICLENO");
+				String preTitle = rs.getString("PRETITLE");
+				String title = rs.getString("TITLE");
+				String content = rs.getString("CONTENT");
+				String user_id = rs.getString("USER_ID");
+				String user_nickName = rs.getString("USER_NICKNAME");
+				Date regDate = rs.getTimestamp("REGDATE");
+				Date modDate = rs.getTimestamp("MODDATE");
+				int read_cnt = rs.getInt("READ_CNT");
+
+				Board board = new Board(boardKey, boardName, articleNo, preTitle, title, content, user_id,
+						user_nickName, regDate, modDate, read_cnt);
+				
+				list.add(board);
+
+			}
+
+		} finally {
+			JdbcUtil.close(rs, pstmt);
+		}
+		return list;
+	}
+
+	public int getTotalArticleBySearchWord(Connection con, String searchWord) throws SQLException {
+		searchWord = searchWord.toUpperCase();
+		String sql = "SELECT COUNT(*) FROM board WHERE (UPPER(content) LIKE '%"+searchWord+"%' or TITLE LIKE '%"+searchWord+"%')";
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sql);
+
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+			return 0;
+		} finally {
+			JdbcUtil.close(rs, stmt);
+		}
+	}
+
+	public int getTotalArticleBySearchWordInBoard(Connection con, String boardName, String searchMethod, String searchWord) throws SQLException {
+		searchWord = searchWord.toUpperCase();
+		String sql = "SELECT COUNT(*) FROM board WHERE (UPPER("+searchMethod+") LIKE '%"+searchWord+"%') and boardname='"+boardName+"'";
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sql);
+
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+			return 0;
+		} finally {
+			JdbcUtil.close(rs, stmt);
+		}
+	}
+
+	public List<Board> getArticleListBySeachWordInBoard(Connection con, String boardName, String searchMethod,
+			String searchWord, int pageNum, int onePageNum) throws SQLException {
+		searchWord = searchWord.toUpperCase();
+		String sql = "SELECT rn, boardKey, boardName, articleno, preTitle, title, CONTENT, user_id, user_nickName, regDate, moddate, read_cnt FROM "
+				+ "(SELECT ROWNUM rn, boardKey, boardName, articleno, preTitle, title, CONTENT, user_id, user_nickName, regDate, moddate, read_cnt "
+				+ "FROM (SELECT * FROM board WHERE (UPPER("+searchMethod+") LIKE '%"+searchWord+"%') and boardname='"+boardName+"' ORDER BY regDate DESC) ORDER BY rn ) WHERE rn BETWEEN ? and ?";
+		List<Board> list = new ArrayList<Board>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pageNum * onePageNum - onePageNum + 1);
+			pstmt.setInt(2, pageNum * onePageNum);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+
+				int boardKey = rs.getInt("BOARDKEY");
+				boardName = rs.getString("BOARDNAME");
+				int articleNo = rs.getInt("ARTICLENO");
+				String preTitle = rs.getString("PRETITLE");
+				String title = rs.getString("TITLE");
+				String content = rs.getString("CONTENT");
+				String user_id = rs.getString("USER_ID");
+				String user_nickName = rs.getString("USER_NICKNAME");
+				Date regDate = rs.getTimestamp("REGDATE");
+				Date modDate = rs.getTimestamp("MODDATE");
+				int read_cnt = rs.getInt("READ_CNT");
+
+				Board board = new Board(boardKey, boardName, articleNo, preTitle, title, content, user_id,
+						user_nickName, regDate, modDate, read_cnt);
+				
+				list.add(board);
+
+			}
+
+		} finally {
+			JdbcUtil.close(rs, pstmt);
+		}
+		return list;
+	}
+
+	public List<Board> getArticleListByRecommandOrder(Connection con, int i) throws SQLException {
+		String sql = "SELECT rn, boardKey, boardName, articleno, preTitle, title, CONTENT, user_id, user_nickName, regDate, moddate, read_cnt FROM "
+				+ "(SELECT ROWNUM rn, boardKey, boardName, articleno, preTitle, title, CONTENT, user_id, user_nickName, regDate, moddate, read_cnt "
+				+ "FROM (SELECT * FROM board ORDER BY ARTICLENO DESC) ORDER BY rn ) WHERE rn BETWEEN 1 and "+i;
+		List<Board> list = new ArrayList<Board>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+
+			pstmt = con.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+
+				int boardKey = rs.getInt("BOARDKEY");
+				String boardName = rs.getString("BOARDNAME");
+				int articleNo = rs.getInt("ARTICLENO");
+				String preTitle = rs.getString("PRETITLE");
+				String title = rs.getString("TITLE");
+				String content = rs.getString("CONTENT");
+				String user_id = rs.getString("USER_ID");
+				String user_nickName = rs.getString("USER_NICKNAME");
+				Date regDate = rs.getTimestamp("REGDATE");
+				Date modDate = rs.getTimestamp("MODDATE");
+				int read_cnt = rs.getInt("READ_CNT");
+
+				Board board = new Board(boardKey, boardName, articleNo, preTitle, title, content, user_id,
+						user_nickName, regDate, modDate, read_cnt);
+				
+				list.add(board);
+
+			}
+
+		} finally {
+			JdbcUtil.close(rs, pstmt);
+		}
+		return list;
+	}
+	
+	public List<Board> getArticleListByRecent(Connection con, int i) throws SQLException {
+		String sql = "SELECT rn, boardKey, boardName, articleno, preTitle, title, CONTENT, user_id, user_nickName, regDate, moddate, read_cnt FROM "
+				+ "(SELECT ROWNUM rn, boardKey, boardName, articleno, preTitle, title, CONTENT, user_id, user_nickName, regDate, moddate, read_cnt "
+				+ "FROM (SELECT * FROM board ORDER BY regdate DESC) ORDER BY rn ) WHERE rn BETWEEN 1 and "+i;
+		List<Board> list = new ArrayList<Board>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+
+			pstmt = con.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+
+				int boardKey = rs.getInt("BOARDKEY");
+				String boardName = rs.getString("BOARDNAME");
+				int articleNo = rs.getInt("ARTICLENO");
+				String preTitle = rs.getString("PRETITLE");
+				String title = rs.getString("TITLE");
+				String content = rs.getString("CONTENT");
+				String user_id = rs.getString("USER_ID");
+				String user_nickName = rs.getString("USER_NICKNAME");
+				Date regDate = rs.getTimestamp("REGDATE");
+				Date modDate = rs.getTimestamp("MODDATE");
+				int read_cnt = rs.getInt("READ_CNT");
+
+				Board board = new Board(boardKey, boardName, articleNo, preTitle, title, content, user_id,
+						user_nickName, regDate, modDate, read_cnt);
+				
+				list.add(board);
+
+			}
+
+		} finally {
+			JdbcUtil.close(rs, pstmt);
+		}
+		return list;
+	}
+
 }

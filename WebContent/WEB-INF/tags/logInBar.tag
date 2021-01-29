@@ -20,8 +20,10 @@
 				<button class="btn btn-primary">로그인</button>
 			</form>
 			<div class="mt-2">
+				<small>
 				<a href="${root }/join.do">회원가입</a> / <a href="${root }/findId.do">아이디찾기</a>
 				/<a href="${root }/findPassword.do">패스워드찾기</a>
+				</small>
 			</div>
 		</div>
 	</div>
@@ -32,6 +34,7 @@
 		<div class="border border=5 p-2 style="font-size:14px"">
 			<c:if test="${!empty authUser }">
 				<p>${authUser.nickName }님환영합니다</p>
+				<small>
 				<a href="${root }/auth/logout.do">로그아웃</a>
 				<a href="${root }/auth/check/changeMemberInfo.do">회원정보수정</a>
 				<a href="${root }/auth/check/deleteMember.do">회원탈퇴</a>
@@ -39,6 +42,7 @@
 					<br />
 					<a href="${root }/admin/boardControl.do">게시판관리</a>
 				</c:if>
+				</small>
 			</c:if>
 		</div>
 	</div>
